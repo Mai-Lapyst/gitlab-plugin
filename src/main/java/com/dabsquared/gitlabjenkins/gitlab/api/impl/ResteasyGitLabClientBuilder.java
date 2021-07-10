@@ -197,13 +197,15 @@ public class ResteasyGitLabClientBuilder extends GitLabClientBuilder {
             return "";
         }
 
+	private static boolean LOG_PRIVATE_TOKEN = Boolean.getBoolean("com.dabsquared.gitlabjenkins.LogPrivateToken");
+
         private static class HeaderToFilteredString implements Function<Map.Entry<String, List<Object>>, String> {
             @Nullable
             @Override
             public String apply(@Nullable Map.Entry<String, List<Object>> input) {
                 if (input == null) {
                     return null;
-                } else if (input.getKey().equals(PRIVATE_TOKEN)) {
+                } else if (!LOG_PRIVATE_TOKEN && input.getKey().equals(PRIVATE_TOKEN)) {
                     return input.getKey() + " = [****FILTERED****]";
                 } else {
                     return input.getKey() + " = [" + Joiner.on(", ").join(input.getValue()) + "]";
